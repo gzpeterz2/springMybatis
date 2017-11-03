@@ -40,5 +40,17 @@
 	<bean id="userDao" class="com.hc.mybatis.dao.UserDaoImpl">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
 	</bean>
+
+	<!-- 生成 mapper 代理对象 1 -->
+	<!-- <bean id="itemsMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"  value="com.hc.mybatis.mapper.ItemsMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean> -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.hc.mybatis.mapper" />
+        <!-- optional unless there are multiple session factories defined -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+
     
 </beans>

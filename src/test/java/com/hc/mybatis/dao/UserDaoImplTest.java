@@ -1,45 +1,31 @@
 package com.hc.mybatis.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.sql.SQLException;
 
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.hc.mybatis.po.User;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="classpath:spring/applicationContext.xml")
 public class UserDaoImplTest {
 	
-	private static ApplicationContext applicationContext;
-
-	@BeforeClass
-	public static void beforeClass() throws Exception {
-		applicationContext = new 
-			ClassPathXmlApplicationContext("spring/applicationContext.xml");
-	}
-
-	@Ignore
-	@Test
-	public void testInsert() {
-		fail("Not yet implemented");
-	}
-
-	@Ignore
-	@Test
-	public void testUpdate() {
-		fail("Not yet implemented");
-	}
-
+	@Autowired
+	private UserDao userDao;
+	
 	@Test
 	public void testSelectById() throws SQLException {
-		UserDao userDao = (UserDao) applicationContext.getBean("userDao");
+		// UserDao userDao = (UserDao) applicationContext.getBean("userDao");
 		User user = userDao.selectById(22);
 		assertTrue(user != null);
 		System.out.println(user);
 	}
-
 }

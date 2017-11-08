@@ -20,6 +20,15 @@ import com.hc.mybatis.po.User;
  */
 public class UserDaoImpl extends SqlSessionDaoSupport implements UserDao {
 	
+	public User selectById(Integer id) throws SQLException {
+		User user = null;
+		SqlSession sqlSession = this.getSqlSession();
+
+		//第一个参数 是  namespace +  statementID
+		//第二个参数  就是 我们的 输入参数
+		user = sqlSession.selectOne("test.selectById", id);
+		return user;
+	}
 
 	public boolean insert(User entity) throws SQLException {
 		// TODO Auto-generated method stub
@@ -36,15 +45,7 @@ public class UserDaoImpl extends SqlSessionDaoSupport implements UserDao {
 		return false;
 	}
 
-	public User selectById(Integer id) throws SQLException {
-		User user = null;
-		SqlSession sqlSession = this.getSqlSession();
 
-		//第一个参数 是  namespace +  statementID
-		//第二个参数  就是 我们的 输入参数
-		user = sqlSession.selectOne("test.selectById", id);
-		return user;
-	}
 
 	public List<User> selectAll() throws SQLException {
 		// TODO Auto-generated method stub

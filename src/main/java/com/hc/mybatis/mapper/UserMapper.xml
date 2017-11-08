@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间，为了对sql语句进行隔离，方便管理 ，mapper开发dao方式，使用namespace有特殊作用
+mapper代理开发时将namespace指定为mapper接口的全限定名
+ -->
+<mapper namespace="com.hc.mybatis.mapper.UserMapper">
+<!-- 在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象
+mapper.xml以statement为单位管理sql语句
+ -->
+ 	<!-- 单位：毫秒 -->
+ <!-- <cache eviction="FIFO" readOnly="true" flushInterval="600000" size="1000"/> -->
+ 
+ 	
+ 
+ 	
+	<!-- sql 片段 -->
+	<!-- 注意 并没有 包含 where 关键字 -->
+ 	<sql id="sql_DSQL_where">
+ 				<if test="username != null">
+					and username like '%${username}%'
+				</if>
+				<if test="beginId != null">
+					and id &gt; #{beginId}
+				</if>
+				<if test="endId != null">
+					and id &lt; #{endId}
+				</if>
+ 	</sql>
+ 	
+	<!-- 根据id查询用户信息 -->
+	<!-- 
+		id：唯一标识 一个statement
+		#{}：表示 一个占位符，如果#{}中传入简单类型的参数，#{}中的名称随意
+		parameterType：输入 参数的类型，通过#{}接收parameterType输入 的参数
+		resultType：输出结果 类型，不管返回是多条还是单条，指定单条记录映射的pojo类型
+	 -->
+	<select id="selectById" parameterType="int" resultType="user">
+		SELECT * FROM user WHERE id= #{id}
+	</select>
+
+	<select id="selectBetween" parameterType="userCustom" resultType="user">
+		<!-- select * from user  where id &gt; #{beginId} and id &lt; #{endId}  -->
+		<!-- select * from user where id > #{beginId} and id < #{endId}  -->
+		select * from user where id between #{beginId} and #{endId}
+		<!-- select * from user where id > #{beginId} -->
+	</select>
+	
+	<!-- 动态SQL -->
+	<select id="selectDSQL" parameterType="userCustom" resultType="user">
+		<!-- select * from user  where id &gt; #{beginId} and id &lt; #{endId}  -->
+		select * from user 
+			<where>
+				<include refid="sql_DSQL_where"></include>
+			</where>
+	</select>
+	
+	<!-- foreach SQL -->
+	<!-- SELECT * FROM USER WHERE id IN (10, 50, 51) -->
+	<select id="selectForeach" parameterType="userCustom" resultType="user">
+		select * from user where 
+		<foreach collection="list" open=" id IN ( " close=")" item="id" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	
+
+	<!-- 包装类的 -->
+	<select id="selectBetween2" parameterType="userQueryVo" resultType="user">
+		select * from user where id between #{userCustom.beginId} and #{userCustom.endId}
+	</select>
+
+	<select id="countTable" parameterType="userCustom" resultType="int">
+		select count(*) from user where id between #{beginId} and #{endId}
+	</select>
+
+
+	 <!-- 根据用户名称进行模糊查询  代号必须为 ${value}, 参数不带修饰（引号） -->
+	<select id="selectLikeName" parameterType="String" resultType="user">
+		SELECT * FROM user WHERE username like '%${value}%'
+	</select>
+	
+	<!-- insert 一个用户数据 -->
+	<!-- parameterType 是一个 pojo 的对象 User,  User 有以下属性， username,sex,birthday,address
+	#{} 接受 pojo 的属性， 通过 OGNL 进行解析
+	#{username} 代表 user的属性  username -->
+	<insert id="insert"  parameterType="user">
+		<selectKey keyProperty="id" order="AFTER" resultType="int">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into user(username, sex, birthday, address) 
+		values (#{username}, #{sex}, #{birthday}, #{address})
+	</insert>
+
+
+	
+	<delete id="delete" parameterType="int" >
+		delete  from user where id = #{id}
+	</delete>
+	
+	<update id="update" parameterType="com.hc.mybatis.po.User" >
+		update user set username=#{username} , sex=#{sex}, birthday=#{birthday},
+			address=#{address} where id = #{id}
+	</update>
+	 
+
+</mapper>	

@@ -1,17 +1,18 @@
 package com.hc.mybatis.po;
 
 import java.util.Date;
+import java.util.List;
 
 public class Orders {
     private Integer id;
-
     private Integer userId;
-
     private String number;
-
     private Date createtime;
-
     private String note;
+
+    // 放一个 user bean 对象 进入 Orders bean
+    private User user;
+    private List<Orderdetail> orderdetailList;
 
     public Integer getId() {
         return id;
@@ -52,4 +53,27 @@ public class Orders {
     public void setNote(String note) {
         this.note = note == null ? null : note.trim();
     }
+
+	@Override
+	public String toString() {
+		return "Orders [id=" + id + ", userId=" + userId + ", number=" + number + ", createtime=" + createtime
+				+ ", note=" + note + "]";
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<Orderdetail> getOrderdetailList() {
+		return orderdetailList;
+	}
+
+	public void setOrderdetailList(List<Orderdetail> orderdetailList) {
+		this.orderdetailList = orderdetailList;
+	}
+    
 }

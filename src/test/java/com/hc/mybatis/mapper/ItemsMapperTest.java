@@ -1,48 +1,59 @@
+/**  
+ * Project Name:springMybatis  
+ * File Name:ItemsMapperTest.java  
+ * Package Name:com.hc.mybatis.mapper  
+ * Date:2017年11月8日下午5:58:51  
+ * Copyright (c) 2017, chenzhou1025@126.com All Rights Reserved.  
+ *  
+*/  
+  
 package com.hc.mybatis.mapper;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.hc.mybatis.po.Items;
 import com.hc.mybatis.po.ItemsExample;
 
+/**  
+ * ClassName:ItemsMapperTest <br/>  
+ * Date:     2017年11月8日 下午5:58:51 <br/>  
+ * @author   zhangwen  
+ * @since    JDK 1.6  
+ * @see        
+ */
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:spring/applicationContext.xml")
-// @ContextConfiguration(locations={"file1", "file2"})
 public class ItemsMapperTest {
 
 	@Autowired
 	private ItemsMapper mapper;
-
-	@Ignore
 	@Test
-	public void testDeleteById() {
-		fail("Not yet implemented");
+	public void testSelectByPrimaryKey() {
+		Items items = mapper.selectByPrimaryKey(1);
+		System.out.println(items);
+		int id = items.getId();
+		assertEquals(1, id);
 	}
 
-	@Ignore
 	@Test
-	public void testSelectByPrimaryKey() throws SQLException {
+	public void testSelectByExampleWithBLOBs() {
+		ItemsExample example = new ItemsExample();
+		ItemsExample.Criteria criteria = example.createCriteria();
+		criteria.andIdBetween(1, 2);
 
-		Items items = mapper.selectById(1);
-		// mapper.selectByPrimaryKey(1);
-		// mapper.selectByExample(example)
-		
-		assertTrue(items != null);
-		System.out.println(items.getName());
-	
+		List<Items> list = mapper.selectByExampleWithBLOBs(example);
+		System.out.println(list);
+		assertEquals(2, list.size());
 	}
 }
+  
